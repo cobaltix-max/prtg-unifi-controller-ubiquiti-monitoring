@@ -33,7 +33,9 @@ param(
 # this is in anticipation of a LOT of access points - reset the cache every 300s
 # for any ap that checks in within that window, they can pull the static file, rather than making continuous network requests
 # to get essentially the same data concurrently
-[string]$logPath = ((Get-ItemProperty -Path "hklm:SOFTWARE\Wow6432Node\Paessler\PRTG Network Monitor\Server\Core" -Name "Datapath").DataPath) + "Logs (Sensors)\"
+#[string]$logPath = ((Get-ItemProperty -Path "hklm:SOFTWARE\Wow6432Node\Paessler\PRTG Network Monitor\Server\Core" -Name "Datapath").DataPath) + "Logs (Sensors)\"
+#Below is logpath for probes
+[string]$logPath = ((Get-ItemProperty -Path "hklm:SOFTWARE\Wow6432Node\Paessler\PRTG Network Monitor\Probe" -Name "Temppath").Temppath) + 'Logs\sensors\'
 $cacheFile = $logPath + "unifi-api-cache.json"
 
 #Ignore SSL Errors
@@ -56,7 +58,7 @@ function controllerLogin(){
 
   # Perform the authentication and store the token to myWebSession
   try {
-    $null = Invoke-Restmethod -Uri "$controller/api/login" -method post -body $credential -ContentType "application/json; charset=utf-8"  -SessionVariable myWebSession
+    $null = Invoke-Restmethod -Uri "$controller/api/auth/login" -method post -body $credential -ContentType "application/json; charset=utf-8"  -SessionVariable myWebSession
   }catch{
   	Write-Output "<prtg>"
   	Write-Output "<error>1</error>"
@@ -67,7 +69,7 @@ function controllerLogin(){
 
   #Query API providing token from first query.
   try {
-    $jsonresultat = Invoke-Restmethod -Uri "$controller/api/s/$site/stat/device/" -WebSession $myWebSession
+    $jsonresultat = Invoke-Restmethod -Uri "$controller/proxy/network/api/s/$site/stat/device/" -WebSession $myWebSession
   }catch{
 
   	Write-Output "<prtg>"
