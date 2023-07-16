@@ -3,6 +3,7 @@ Scripts I use to monitor Ubiquiti/Unifi equipment with PRTG.
 
 - [Access Point Monitoring](ap-monitoring-prtg)
 
+### YOU WILL NEED TO USE GPEDIT.MSC TO ALLOW POWERSHELL TO RUN!
 
 ***
 
